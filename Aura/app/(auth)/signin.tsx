@@ -1,28 +1,40 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
+import { deleteSession, signIn } from '@/lib/appwrite'
+import { loginSchema } from '@/constants/schema'
 
-
-interface LoginProps{
-  email: string,
-  password: string
-}
 
 const Signin = () => {
 
-  const [form, setForm] = useState<LoginProps>({
+  const [form, setForm] = useState<loginSchema>({
     email: "",
     password: ""
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
+  const submit = async () => {
+    if(!form.email || !form.password){
+      Alert.alert("Error", "Please fill all the fields.")
+      return
+    }
 
+    setIsSubmitting(true)
+
+    try{
+      await signIn({email: form.email, password: form.password})
+
+      router.replace("/home")
+    }catch(error: any){
+      Alert.alert("Error", error?.message)
+    }finally{
+      setIsSubmitting(false)
+    }
   }
 
   return (

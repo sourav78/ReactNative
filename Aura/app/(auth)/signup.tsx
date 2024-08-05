@@ -1,21 +1,16 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
-import { Link } from 'expo-router'
-
-
-interface SignupProps{
-  username: string
-  email: string,
-  password: string
-}
+import { Link, router } from 'expo-router'
+import { createUser } from '@/lib/appwrite'
+import { registerSchema } from '@/constants/schema'
 
 const Signup = () => {
 
-  const [form, setForm] = useState<SignupProps>({
+  const [form, setForm] = useState<registerSchema>({
     username: "",
     email: "",
     password: ""
@@ -23,8 +18,23 @@ const Signup = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
+  const submit = async () => {
 
+    if(!form.email || !form.password || !form.username){
+      Alert.alert("Error", "Please fill all the fields.")
+    }
+
+    setIsSubmitting(true)
+
+    try{
+      const result = await createUser({email: form.email, password: form.password, username: form.username})
+
+      router.replace("/home")
+    }catch(error: any){
+      Alert.alert("Error", error?.message)
+    }finally{
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -39,7 +49,7 @@ const Signup = () => {
           <Text className='text-2xl text-white font-psemibold mt-10'>Signup on Aura</Text>
 
           <FormField
-            title="Email"
+            title="Username"
             value={form.username}
             handleChangeText={(e:string) => setForm({...form, username: e})}
             otherStyle="mt-7"
