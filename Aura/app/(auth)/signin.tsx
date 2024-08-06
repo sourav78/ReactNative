@@ -5,11 +5,14 @@ import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
 import { Link, router } from 'expo-router'
-import { deleteSession, signIn } from '@/lib/appwrite'
+import { deleteSession, getCurrentUser, signIn } from '@/lib/appwrite'
 import { loginSchema } from '@/constants/schema'
+import { useGlobalContext } from '@/context/GlobalProvider'
 
 
 const Signin = () => {
+
+  const {setUser, setIsLoggedIn} = useGlobalContext()
 
   const [form, setForm] = useState<loginSchema>({
     email: "",
@@ -28,6 +31,9 @@ const Signin = () => {
 
     try{
       await signIn({email: form.email, password: form.password})
+      const result = await getCurrentUser()
+      setUser(result)
+      setIsLoggedIn(true)
 
       router.replace("/home")
     }catch(error: any){

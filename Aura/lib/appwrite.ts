@@ -1,5 +1,5 @@
 import { loginSchema, registerSchema } from '@/constants/schema';
-import { Account, Avatars, Client, Databases, ID } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, Query } from 'react-native-appwrite';
 
 export const appwriteConfig = {
     endpoint: "https://cloud.appwrite.io/v1",
@@ -74,4 +74,25 @@ export const deleteSession = async () => {
     const result = await account.deleteSessions();
     console.log("session deleted");
     
+}
+
+export const getCurrentUser = async () => {
+    try{
+        const currentAccount = await account.get()
+
+        if(!currentAccount) throw Error
+
+        const currentUser = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            [Query.equal("accountId", currentAccount.$id)]
+        )
+
+        if(!currentUser) throw Error
+
+        return currentUser.documents[0]
+    }catch(error){
+        console.log(error);
+        
+    }
 }
