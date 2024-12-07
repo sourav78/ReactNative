@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ship1",
-    "slug": "ship1",
+    "name": "ship2",
+    "slug": "ship2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,10 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.native.ship1",
-      "permissions": [
-        "ACCESS_FINE_LOCATION"
-      ]
+      "package": "com.sourav78.ship2"
     },
     "web": {
       "bundler": "metro",
@@ -46,7 +43,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "a2cb5f0d-a5a5-4e5e-8f6b-f357e2a39f48"
+        "projectId": "12eedfea-dfb2-4dc9-b8c1-19b6aa37102d"
       }
     }
   }
